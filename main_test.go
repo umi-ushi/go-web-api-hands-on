@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"testing"
 
@@ -10,14 +12,22 @@ import (
 )
 
 func TestRun(t *testing.T) {
+	l, err := net.Listen("tcp", "localhost:0")
+	if err != nil {
+		t.Fatalf("failed to listen port: %v", err)
+	}
+
 	ctx, cancel := context.WithCancel(context.Background())
 	eg, ctx := errgroup.WithContext(ctx)
 	eg.Go(func() error {
-		return run(ctx)
+		return run(ctx, l)
 	})
 
 	// テストリクエストを送信
-	resp, err := http.Get("http://localhost:18080/test")
+	url := fmt.Sprintf("http://%s/%s", l.Addr().String(), "test")
+	t.Logf("try request to %s", url)
+
+	resp, err := http.Get(url)
 	if err != nil {
 		t.Fatalf("failed to send request: %v", err)
 	}
