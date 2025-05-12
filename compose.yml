@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      args:
+        - target=dev
+    volumes:
+      - .:/app
+    ports:
+      - "18080:80"
