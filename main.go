@@ -11,6 +11,8 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+// MARK: Main Function
+
 func main() {
 	if len(os.Args) != 2 {
 		log.Printf("need port number\n")
@@ -28,6 +30,8 @@ func main() {
 		log.Printf("failed to terminate server: %v", err)
 	}
 }
+
+// MARK: Run Function
 
 func run(ctx context.Context, l net.Listener) error {
 	s := &http.Server{
